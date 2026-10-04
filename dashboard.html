@@ -3,52 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0f766e">
+<meta name="theme-color" content="#071536">
 <title>MathFlow — Dashboard Guru</title>
 <style>
-:root{--bg:#071426;--panel:#10213a;--panel2:#173254;--text:#f4f8ff;--muted:#b6c7dd;--line:#2c4b70;--a:#63e6ff;--b:#a78bfa;--good:#67e8a5;--gold:#ffd166;--pink:#ff7ab6}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0%,#63e6ff22,transparent 28%),radial-gradient(circle at 10% 90%,#a78bfa20,transparent 30%),linear-gradient(135deg,#071426,#0b1730 55%,#081322);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
-.wrap{max-width:1240px;margin:auto}header{background:#071426cc;border-bottom:1px solid var(--line);backdrop-filter:blur(14px);padding:24px 18px;position:sticky;top:0;z-index:5}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.top h1{margin:0;font-size:clamp(27px,5vw,42px);letter-spacing:-.04em}.top p{margin:7px 0 0;color:var(--muted)}
-.live{border:1px solid #31557e;border-radius:99px;padding:9px 13px;color:var(--a);background:#0d2139;font-size:13px;font-weight:800;box-shadow:0 8px 25px #0003}.online{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--good);margin-right:6px;box-shadow:0 0 10px #67e8a5}
-main{max-width:1240px;margin:auto;padding:24px 18px 55px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}.stat{background:linear-gradient(145deg,#142a48f5,#0b1a30f5);border:1px solid #315075;border-radius:20px;padding:18px;box-shadow:0 18px 45px #0004;position:relative;overflow:hidden}.stat:after{content:'✦';position:absolute;right:16px;top:10px;color:#63e6ff44;font-size:28px}.stat b{font-size:30px;display:block;letter-spacing:-.03em}.stat span{font-size:13px;color:var(--muted)}
-.panel{background:linear-gradient(145deg,#142a48f5,#0b1a30f5);border:1px solid #315075;border-radius:22px;padding:18px;box-shadow:0 20px 55px #0004;margin-bottom:16px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.toolbar input,.toolbar select{padding:11px 13px;border:1px solid #315075;border-radius:12px;background:#08172b;color:#fff;font:inherit;outline:0}.toolbar input{min-width:250px}.toolbar input:focus,.toolbar select:focus{border-color:var(--a);box-shadow:0 0 0 3px #63e6ff14}button{border:1px solid #31557e;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer;background:#173254;color:#dff8ff;transition:.18s}button:hover{background:#214267;transform:translateY(-1px)}
-.tablewrap{overflow:auto;border:1px solid #263f61;border-radius:16px}table{width:100%;border-collapse:collapse;min-width:930px}th,td{padding:13px 10px;border-bottom:1px solid #203957;text-align:left;vertical-align:middle}th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#0b1b31;position:sticky;top:0}td{font-size:14px}tbody tr:hover{background:#ffffff06}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;border:1px solid transparent}.done{background:#67e8a514;color:var(--good);border-color:#67e8a52b}.wait{background:#ffd16612;color:var(--gold);border-color:#ffd1662b}.lock{background:#b6c7dd10;color:var(--muted);border-color:#b6c7dd22}.members{font-size:12px;color:var(--muted);line-height:1.5}.time{white-space:nowrap;font-size:12px;color:var(--muted)}.empty{text-align:center;padding:40px;color:var(--muted)}
-.detail{display:none;background:#08172b;border:1px solid #315075;border-radius:16px;padding:16px;margin-top:14px}.detail.show{display:block}.detailgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.kv{background:#10213a;border:1px solid #2c4b70;border-radius:12px;padding:11px}.kv small{color:var(--muted);display:block}.kv b{display:block;margin-top:3px;color:#f4f8ff}
-@media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}.detailgrid{grid-template-columns:1fr}}@media(max-width:480px){.cards{grid-template-columns:1fr 1fr}.toolbar input{min-width:100%;width:100%}.top h1{font-size:28px}}
+:root{--bg:#050d24;--panel:#0b1738;--panel2:#101f4a;--line:#243a76;--text:#f6f8ff;--muted:#aab8dc;--cyan:#35d9ff;--blue:#4d8dff;--purple:#9b70ff;--pink:#ff4f9a;--green:#36e3a2;--gold:#ffd25a;--danger:#ff557d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 72% -5%,#3158b544,transparent 28%),radial-gradient(circle at 10% 88%,#7144c52e,transparent 28%),linear-gradient(145deg,#050b1e,#08143a 50%,#040b20);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#ffffff55 1px,transparent 1px);background-size:55px 55px;opacity:.13}
+.app{display:grid;grid-template-columns:235px 1fr;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:26px 16px;border-right:1px solid #23366b;background:linear-gradient(180deg,#07132fef,#06102af2);backdrop-filter:blur(18px);z-index:5}.brand{padding:8px 10px 28px}.brandmark{font-size:30px;font-weight:950;letter-spacing:-.06em;background:linear-gradient(90deg,#fff,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}.nav{display:grid;gap:8px}.nav a{display:flex;align-items:center;gap:12px;color:#c9d5f2;text-decoration:none;padding:12px 13px;border-radius:13px;font-weight:750}.nav a.active{color:white;background:linear-gradient(90deg,#1679e9,#3b4fd6);box-shadow:0 10px 25px #1679e944}.nav a:hover{background:#ffffff0d}.navicon{width:24px;text-align:center;font-size:18px}.quote{position:absolute;left:22px;right:22px;bottom:32px;color:#8fa3d3;font-size:12px;line-height:1.65;font-style:italic}.quote:before{content:"✦";color:var(--cyan);margin-right:7px}
+.content{min-width:0}.topbar{height:72px;border-bottom:1px solid #1d3061;display:flex;justify-content:flex-end;align-items:center;padding:0 28px;gap:16px;background:#050d24aa;backdrop-filter:blur(15px);position:sticky;top:0;z-index:4}.bell{font-size:20px;color:#aebce0}.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#2d8cff,#8d62ff);box-shadow:0 0 20px #557bff55}
+main{max-width:1420px;margin:auto;padding:36px 30px 55px}.welcome{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:25px}.welcome h1{margin:0;font-size:clamp(27px,3vw,40px);letter-spacing:-.045em}.welcome p{margin:9px 0 0;color:var(--muted);line-height:1.55}.live{min-width:245px;border:1px solid #1dcdb6aa;border-radius:16px;padding:14px 17px;background:#092f344c;box-shadow:0 0 28px #19d7b822}.live strong{display:block;color:#63f3c4;font-size:14px}.live small{display:block;color:#91a9ca;margin-top:4px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--green);box-shadow:0 0 12px var(--green);margin-right:7px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.stat{position:relative;overflow:hidden;min-height:126px;border:1px solid #294a91;border-radius:19px;padding:18px;background:linear-gradient(145deg,#102558e8,#091638e8);box-shadow:0 18px 40px #0005}.stat:nth-child(2){border-color:#168d91}.stat:nth-child(3){border-color:#734bd0}.stat:nth-child(4){border-color:#aa3f99}.stat:after{content:"";position:absolute;width:100px;height:100px;right:-25px;bottom:-45px;border-radius:50%;background:#ffffff08}.stat-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:21px;background:#2e7bff33;float:left;margin-right:13px}.stat:nth-child(2) .stat-icon{background:#19d99b2e}.stat:nth-child(3) .stat-icon{background:#a36cff32}.stat:nth-child(4) .stat-icon{background:#ff4bb12e}.stat label{display:block;color:#b7c5e8;font-size:12px;font-weight:800}.stat b{display:block;font-size:31px;margin-top:3px;letter-spacing:-.04em}.stat em{display:block;color:#8497c4;font-size:11px;font-style:normal;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:18px;align-items:start}.panel{border:1px solid #27417f;border-radius:20px;background:linear-gradient(145deg,#0d1b41f4,#08132ff4);box-shadow:0 22px 55px #0005;padding:18px}.panel-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:16px}.panel-title{display:flex;align-items:center;gap:10px}.panel-title .icon{font-size:23px}.panel h2{font-size:18px;margin:0}.panel p{margin:4px 0 0;color:#8498c5;font-size:12px}
+.controls{display:grid;gap:13px}.search{position:relative}.search input,.controls select{width:100%;padding:12px 13px 12px 40px;border:1px solid #315092;border-radius:12px;background:#071432;color:#fff;outline:none;font:inherit}.controls select{padding-left:13px}.search input:focus,.controls select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #35d9ff12}.search span{position:absolute;left:13px;top:10px;font-size:18px;color:#83a0d8}.control-label{font-size:11px;color:#8ea3d0;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.btn{width:100%;border:1px solid #2e4e91;border-radius:12px;padding:11px 13px;background:#112554;color:#eaf1ff;font-weight:850;cursor:pointer;transition:.18s}.btn:hover{transform:translateY(-1px);filter:brightness(1.12)}.btn.reset{background:linear-gradient(135deg,#a91f4e,#e83c69);border-color:#ff6c91;color:white;box-shadow:0 10px 24px #e63b662b}.warning{font-size:10px;color:#899bc2;line-height:1.5;margin-top:2px}
+.tablewrap{overflow:auto;border:1px solid #1e3569;border-radius:15px}table{width:100%;border-collapse:collapse;min-width:920px}th,td{text-align:left;padding:13px 11px;border-bottom:1px solid #192e5b;vertical-align:middle}th{background:#101f4a;color:#8fa5d5;font-size:10px;text-transform:uppercase;letter-spacing:.08em;position:sticky;top:0;z-index:2}td{font-size:13px}tbody tr:hover{background:#ffffff06}.groupname{font-weight:850;color:#fff}.groupid{font-size:9px;color:#6579a9;margin-top:3px}.members{color:#aab8d8;font-size:11px;line-height:1.5;max-width:190px}.progress{min-width:115px}.progress-top{display:flex;justify-content:space-between;color:#dbe4fa;font-size:11px;margin-bottom:6px}.bar{height:7px;border-radius:99px;background:#1b3162;overflow:hidden}.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#26baff,#43e7dc);box-shadow:0 0 10px #35d9ff55}.badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900;white-space:nowrap}.badge.done{color:#72f3bd;background:#22d99b18;border:1px solid #31e6ad66}.badge.process{color:#ffd45e;background:#ffd04d18;border:1px solid #ffd04d66}.badge.start{color:#65dfff;background:#35cfff18;border:1px solid #35d9ff66}.gate{font-weight:900;color:#aabbe2}.gate.yes{color:#54edb1}.code{font-weight:900;color:#ffd55f;letter-spacing:.08em}.time{white-space:nowrap;color:#8da1c9;font-size:10px}.detail-btn{border:1px solid #4161a5;background:#101f45;color:#d9e5ff;border-radius:9px;padding:7px 9px;font-weight:800;cursor:pointer}.empty{text-align:center;padding:46px;color:#788bb6}.detail{display:none;margin-top:14px;padding:16px;border:1px solid #315092;border-radius:15px;background:#071432}.detail.show{display:block}.detailgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}.kv{padding:11px;border:1px solid #223b73;border-radius:11px;background:#0d1d43}.kv small{display:block;color:#8095c2;font-size:10px}.kv b{display:block;margin-top:4px;color:#fff;font-size:12px}
+.footer-note{margin-top:18px;text-align:center;color:#667da9;font-size:11px}.footer-note span{color:var(--cyan)}
+@media(max-width:1050px){.app{grid-template-columns:190px 1fr}.layout{grid-template-columns:1fr}.controls-panel{order:-1}.controls{grid-template-columns:2fr 1fr 1fr auto;align-items:end}.controls .btn{width:auto}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.app{display:block}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid #23366b;padding:13px 15px}.brand{padding:4px 6px 12px}.brandmark{font-size:25px}.nav{display:flex;overflow:auto}.nav a{white-space:nowrap;padding:9px 11px}.quote{display:none}.topbar{height:55px;padding:0 15px}.topbar .bell{display:none}main{padding:23px 14px 40px}.welcome{display:block}.live{margin-top:16px;min-width:0}.stats{grid-template-columns:1fr 1fr;gap:10px}.stat{min-height:115px;padding:14px}.stat b{font-size:25px}.stat-icon{width:36px;height:36px;font-size:18px}.controls{grid-template-columns:1fr 1fr}.controls .search{grid-column:1/-1}.controls .btn{width:100%}.detailgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.stats{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.controls .search{grid-column:auto}.welcome h1{font-size:28px}}
 </style>
 </head>
 <body>
-<header><div class="wrap top"><div><div style="color:var(--a);font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase">MATHFLOW · POJOK KREATIF</div><h1>📊 Dashboard Perjalanan</h1><p>Pantau perjalanan belajar setiap kelompok secara realtime.</p></div><div class="live" id="connection">● Menghubungkan Firebase...</div></div></header>
-<main>
-<div class="cards">
- <div class="stat"><b id="total">0</b><span>Total kelompok</span></div>
- <div class="stat"><b id="active">0</b><span>Sedang berjalan</span></div>
- <div class="stat"><b id="finished">0</b><span>Selesai</span></div>
- <div class="stat"><b id="fastest">—</b><span>Kelompok tercepat masuk</span></div>
-</div>
-<div class="panel">
- <div class="toolbar">
-  <input id="search" placeholder="Cari nama kelompok...">
-  <select id="filter"><option value="all">Semua progress</option><option value="Discover">Discover</option><option value="Explore">Explore</option><option value="Concept">Concept</option><option value="Gerbang 1">Gerbang 1</option><option value="Gerbang 2">Gerbang 2</option><option value="Gerbang 3">Gerbang 3</option><option value="Gerbang 4">Gerbang 4</option><option value="Final Quest">Final Quest</option><option value="Selesai">Selesai</option></select>
-  <button onclick="sortNewest()">↕ Terbaru</button>
-  <button onclick="resetDashboard()" style="border-color:#7f334f;background:#351526;color:#ff9fc3">🗑️ Reset Data</button>
- </div>
-</div>
-<div class="panel">
- <div class="tablewrap">
- <table><thead><tr><th>Kelompok</th><th>Anggota</th><th>Progress</th><th>G1</th><th>G2</th><th>G3</th><th>G4</th><th>Final</th><th>Kode</th><th>Update</th><th></th></tr></thead>
- <tbody id="rows"><tr><td colspan="11" class="empty">Menunggu data kelompok...</td></tr></tbody></table>
- </div>
- <div id="detail" class="detail"></div>
-</div>
-</main>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brandmark">MathFlow</div><small>Interactive Learning Journey</small></div>
+  <nav class="nav">
+    <a href="#dashboard" class="active"><span class="navicon">⌂</span>Dashboard</a>
+    <a href="#kelompok"><span class="navicon">♟</span>Kelompok</a>
+    <a href="#statistik"><span class="navicon">▥</span>Statistik</a>
+    <a href="#pengaturan"><span class="navicon">⚙</span>Pengaturan</a>
+  </nav>
+  <div class="quote">Setiap langkah adalah bagian dari perjalanan menuju pemahaman.</div>
+</aside>
+<section class="content">
+  <div class="topbar"><span class="bell">♧</span><div class="avatar">👩‍🏫</div></div>
+  <main id="dashboard">
+    <div class="welcome">
+      <div><h1>Halo, Guru! 👋</h1><p>Selamat datang di <b>Dashboard MathFlow</b>.<br>Pantau perkembangan kelompok belajar secara realtime di sini.</p></div>
+      <div class="live" id="connection"><strong><span class="dot"></span>Menghubungkan Firebase...</strong><small>Menyiapkan sinkronisasi data</small></div>
+    </div>
 
+    <section class="stats" id="statistik">
+      <div class="stat"><div class="stat-icon">👥</div><label>Total Kelompok</label><b id="total">0</b><em>kelompok terdaftar</em></div>
+      <div class="stat"><div class="stat-icon">✓</div><label>Kelompok Aktif</label><b id="active">0</b><em>sedang mengerjakan</em></div>
+      <div class="stat"><div class="stat-icon">⌛</div><label>Dalam Proses</label><b id="processing">0</b><em>tahap masih berlangsung</em></div>
+      <div class="stat"><div class="stat-icon">🏆</div><label>Selesai</label><b id="finished">0</b><em>semua tahap selesai</em></div>
+    </section>
+
+    <div class="layout">
+      <section class="panel" id="kelompok">
+        <div class="panel-head"><div class="panel-title"><span class="icon">♟</span><div><h2>Daftar Kelompok</h2><p>Data kelompok akan terupdate otomatis dari Firebase</p></div></div></div>
+        <div class="tablewrap">
+          <table><thead><tr><th>No</th><th>Nama Kelompok</th><th>Anggota</th><th>Tahap Terakhir</th><th>Status</th><th>Update</th><th>Aksi</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="7" class="empty">Menunggu data kelompok...</td></tr></tbody></table>
+        </div>
+        <div id="detail" class="detail"></div>
+      </section>
+
+      <aside class="panel controls-panel" id="pengaturan">
+        <div class="panel-title"><span class="icon">⌕</span><div><h2>Kontrol Dashboard</h2><p>Cari, filter, dan kelola data.</p></div></div>
+        <div class="controls" style="margin-top:16px">
+          <div class="search"><span>⌕</span><input id="search" placeholder="Cari nama kelompok..."></div>
+          <div><div class="control-label">Filter status</div><select id="filter" style="margin-top:6px"><option value="all">Semua Status</option><option value="Discover">Discover</option><option value="Explore">Explore</option><option value="Concept">Concept</option><option value="Gerbang 1">Gerbang 1</option><option value="Gerbang 2">Gerbang 2</option><option value="Gerbang 3">Gerbang 3</option><option value="Gerbang 4">Gerbang 4</option><option value="Final Quest">Final Quest</option><option value="Selesai">Selesai</option></select></div>
+          <div><div class="control-label">Urutkan</div><select id="sort" style="margin-top:6px"><option value="new">Terbaru</option><option value="old">Terlama</option><option value="name">Nama A–Z</option></select></div>
+          <button class="btn" onclick="refreshDashboard()">↻ Refresh</button>
+          <button class="btn reset" onclick="resetDashboard()">▣ Reset Semua Data</button>
+          <div class="warning">Reset akan menghapus seluruh data kelompok dari Firebase dan tidak dapat dibatalkan.</div>
+        </div>
+      </aside>
+    </div>
+    <div class="footer-note">✦ Setiap perjalanan meninggalkan jejak, setiap jejak menunjukkan <span>pertumbuhan.</span></div>
+  </main>
+</section>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyDOEEE_Mr53KLRsiUH8nRZWfxLystSFOmA",
+ apiKey:"AIzaSyDOEEE_Mr53KLRsiUH8nRZBWfxLystSFOmA",
  authDomain:"mathflow-3e648.firebaseapp.com",
  databaseURL:"https://mathflow-3e648-default-rtdb.asia-southeast1.firebasedatabase.app/",
  projectId:"mathflow-3e648",
@@ -57,91 +89,27 @@ const firebaseConfig={
  appId:"1:530609001743:web:a7ec3d2fdf84b372109a7a"
 };
 const app=initializeApp(firebaseConfig),db=getDatabase(app);
-let allData={},newestFirst=true;
-
+let allData={},unsubscribe=null;
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const badge=(ok)=>ok?'<span class="badge done">✓</span>':'<span class="badge lock">—</span>';
-
+function formatTime(v){if(!v)return '—';const d=new Date(Number(v));return isNaN(d)?'—':d.toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'});}
+function stageNumber(p){const map={Discover:1,Explore:2,Concept:3,'Gerbang 1':4,'Gerbang 2':5,'Gerbang 3':6,'Gerbang 4':7,'Final Quest':8,'Secret Code':9,Selesai:10};return map[p]||0;}
+function statusBadge(p){if(p==='Selesai')return '<span class="badge done">Selesai</span>';if(!p)return '<span class="badge start">Mulai</span>';return '<span class="badge process">Dalam Proses</span>';}
+function progressPercent(d){let n=0;if(d.discover?.selesai)n++;if(d.explore?.selesai)n++;if(d.concept?.selesai)n++;if(d.gerbang1)n++;if(d.gerbang2)n++;if(d.gerbang3)n++;if(d.gerbang4)n++;if(d.finalQuest?.selesai)n++;return Math.round(n/8*100);}
 function render(){
- const q=document.getElementById('search').value.toLowerCase().trim();
- const filter=document.getElementById('filter').value;
- let arr=Object.entries(allData).map(([id,d])=>({id,...d}));
- arr=arr.filter(d=>(!q||(d.nama||'').toLowerCase().includes(q))&&(filter==='all'||d.progress===filter));
- arr.sort((a,b)=>{
-   const aa=Number(a.waktuTerakhir)||0,bb=Number(b.waktuTerakhir)||0;
-   return newestFirst?bb-aa:aa-bb;
- });
- const total=Object.keys(allData).length;
- const finished=Object.values(allData).filter(x=>x.progress==='Selesai').length;
- document.getElementById('total').textContent=total;
- document.getElementById('active').textContent=total-finished;
- document.getElementById('finished').textContent=finished;
-
- const entered=Object.entries(allData).filter(([id,d])=>d.secretCode);
- if(entered.length){
-   entered.sort((a,b)=>(Number(a[1].waktuTerakhir)||Infinity)-(Number(b[1].waktuTerakhir)||Infinity));
-   document.getElementById('fastest').textContent=entered[0][1].nama||'—';
- }else document.getElementById('fastest').textContent='—';
-
+ const q=document.getElementById('search').value.toLowerCase().trim(), filter=document.getElementById('filter').value, sort=document.getElementById('sort').value;
+ let arr=Object.entries(allData).map(([id,d])=>({id,...d})).filter(d=>(!q||(d.nama||'').toLowerCase().includes(q))&&(filter==='all'||d.progress===filter));
+ arr.sort((a,b)=>sort==='name'?String(a.nama||'').localeCompare(String(b.nama||'')):sort==='old'?(Number(a.waktuTerakhir)||0)-(Number(b.waktuTerakhir)||0):(Number(b.waktuTerakhir)||0)-(Number(a.waktuTerakhir)||0));
+ const total=Object.keys(allData).length, finished=Object.values(allData).filter(d=>d.progress==='Selesai').length;
+ document.getElementById('total').textContent=total;document.getElementById('finished').textContent=finished;document.getElementById('active').textContent=Math.max(0,total-finished);document.getElementById('processing').textContent=Object.values(allData).filter(d=>d.progress&&d.progress!=='Selesai').length;
  const rows=document.getElementById('rows');
- if(!arr.length){rows.innerHTML='<tr><td colspan="11" class="empty">Belum ada kelompok yang cocok.</td></tr>';return}
- rows.innerHTML=arr.map(d=>{
-  const members=(d.anggota||[]).map(esc).filter(Boolean).join(', ');
-  const final=d.finalQuest?.selesai;
-  return `<tr>
-   <td><b>${esc(d.nama||'Tanpa nama')}</b><br><small>${esc(d.id)}</small></td>
-   <td><div class="members">${members||'—'}</div></td>
-   <td><span class="badge ${d.progress==='Selesai'?'done':'wait'}">${esc(d.progress||'Belum mulai')}</span></td>
-   <td>${badge(!!d.gerbang1)}</td><td>${badge(!!d.gerbang2)}</td><td>${badge(!!d.gerbang3)}</td><td>${badge(!!d.gerbang4)}</td>
-   <td>${badge(!!final)}</td><td><b>${d.secretCode?esc(d.secretCode):'—'}</b></td>
-   <td class="time">${formatTime(d.waktuTerakhir)}</td>
-   <td><button onclick="showDetail('${esc(d.id)}')">Detail</button></td>
-  </tr>`;
- }).join('');
+ if(!arr.length){rows.innerHTML='<tr><td colspan="7" class="empty">Belum ada kelompok yang cocok.</td></tr>';return;}
+ rows.innerHTML=arr.map((d,i)=>{const members=(d.anggota||[]).map(esc).filter(Boolean).join(' · ')||'—', pct=progressPercent(d);return `<tr><td>${i+1}</td><td><div class="groupname">${esc(d.nama||'Tanpa nama')}</div><div class="groupid">${esc(d.id)}</div></td><td><div class="members">${members}</div></td><td><div class="progress"><div class="progress-top"><span>${esc(d.progress||'Belum mulai')}</span><span>${pct}%</span></div><div class="bar"><div class="fill" style="width:${pct}%"></div></div></div></td><td>${statusBadge(d.progress)}</td><td class="time">${formatTime(d.waktuTerakhir)}</td><td><button class="detail-btn" onclick="showDetail('${esc(d.id)}')">Lihat ›</button></td></tr>`;}).join('');
 }
-function formatTime(v){
- if(!v)return '—';
- const d=new Date(Number(v));
- return isNaN(d)?'—':d.toLocaleString('id-ID',{dateStyle:'short',timeStyle:'medium'});
-}
-window.showDetail=function(id){
- const d=allData[id];if(!d)return;
- const box=document.getElementById('detail');
- box.classList.add('show');
- box.innerHTML=`<b>Detail: ${esc(d.nama||'')}</b><div class="detailgrid">
- <div class="kv"><small>Progress</small><b>${esc(d.progress||'—')}</b></div>
- <div class="kv"><small>Kode rahasia</small><b>${esc(d.secretCode||'Belum ada')}</b></div>
- <div class="kv"><small>Discover</small><b>${d.discover?.selesai?'Selesai':'Belum'}</b></div>
- <div class="kv"><small>Explore</small><b>${d.explore?.selesai?'Selesai':'Belum'}</b></div>
- <div class="kv"><small>Concept</small><b>${d.concept?.selesai?'Selesai':'Belum'}</b></div>
- <div class="kv"><small>Challenge</small><b>${d.challenge?.selesai?'Selesai (opsional)':'Belum / dilewati'}</b></div>
- <div class="kv"><small>Final Quest</small><b>${d.finalQuest?.selesai?'Selesai':'Belum'}</b></div>
- <div class="kv"><small>Update terakhir</small><b>${formatTime(d.waktuTerakhir)}</b></div>
- </div>`;
- box.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-window.sortNewest=function(){newestFirst=!newestFirst;render()}
-window.resetDashboard=async function(){
- if(!confirm("⚠️ RESET SEMUA DATA KELOMPOK?\n\nSemua data di Firebase pada mathflow/kelompok akan dihapus dan tidak bisa dibatalkan.")) return;
- const confirmText=prompt("Ketik RESET untuk melanjutkan:");
- if(confirmText!=="RESET"){alert("Reset dibatalkan.");return;}
- try{
-   await remove(ref(db,"mathflow/kelompok"));
-   allData={}; render();
-   document.getElementById("connection").innerHTML="<span class="online"></span>Data berhasil di-reset";
- }catch(err){alert("Gagal mereset data: "+err.message);}
-}
-document.getElementById('search').addEventListener('input',render);
-document.getElementById('filter').addEventListener('change',render);
-
-onValue(ref(db,'mathflow/kelompok'),snap=>{
- allData=snap.val()||{};
- document.getElementById('connection').innerHTML='<span class="online"></span>Realtime aktif';
- render();
-},err=>{
- console.error(err);
- document.getElementById('connection').textContent='● Gagal membaca Firebase';
-});
+window.showDetail=function(id){const d=allData[id];if(!d)return;const box=document.getElementById('detail');box.classList.add('show');box.innerHTML=`<b>Detail: ${esc(d.nama||'')}</b><div class="detailgrid"><div class="kv"><small>Progress</small><b>${esc(d.progress||'Belum mulai')}</b></div><div class="kv"><small>Anggota</small><b>${(d.anggota||[]).map(esc).filter(Boolean).join(', ')||'—'}</b></div><div class="kv"><small>Gerbang</small><b>${d.gerbang1?'✓':''}${d.gerbang2?' ✓':''}${d.gerbang3?' ✓':''}${d.gerbang4?' ✓':''}</b></div><div class="kv"><small>Kode rahasia</small><b>${esc(d.secretCode||'Belum ada')}</b></div><div class="kv"><small>Discover</small><b>${d.discover?.selesai?'Selesai':'Belum'}</b></div><div class="kv"><small>Explore</small><b>${d.explore?.selesai?'Selesai':'Belum'}</b></div><div class="kv"><small>Concept</small><b>${d.concept?.selesai?'Selesai':'Belum'}</b></div><div class="kv"><small>Challenge</small><b>${d.challenge?.selesai?'Selesai (opsional)':'Belum / dilewati'}</b></div></div>`;box.scrollIntoView({behavior:'smooth',block:'nearest'});};
+window.refreshDashboard=function(){render();const c=document.getElementById('connection');c.innerHTML='<strong><span class="dot"></span>Realtime aktif</strong><small>Dashboard diperbarui</small>';setTimeout(()=>{c.innerHTML='<strong><span class="dot"></span>Realtime aktif</strong><small>Data tersinkronisasi dengan Firebase</small>';},1200);};
+window.resetDashboard=async function(){if(!confirm('Yakin ingin menghapus SEMUA data kelompok dari dashboard?'))return;if(!confirm('Konfirmasi terakhir: seluruh data di mathflow/kelompok akan dihapus permanen. Lanjutkan?'))return;try{await remove(ref(db,'mathflow/kelompok'));alert('Semua data kelompok berhasil di-reset.');}catch(err){alert('Gagal mereset data: '+err.message);}};
+document.getElementById('search').addEventListener('input',render);document.getElementById('filter').addEventListener('change',render);document.getElementById('sort').addEventListener('change',render);
+onValue(ref(db,'mathflow/kelompok'),snap=>{allData=snap.val()||{};document.getElementById('connection').innerHTML='<strong><span class="dot"></span>Realtime aktif</strong><small>Data tersinkronisasi dengan Firebase</small>';render();},err=>{console.error(err);document.getElementById('connection').innerHTML='<strong style="color:#ff8da8">● Firebase bermasalah</strong><small>'+esc(err.message)+'</small>';});
 </script>
 </body>
 </html>

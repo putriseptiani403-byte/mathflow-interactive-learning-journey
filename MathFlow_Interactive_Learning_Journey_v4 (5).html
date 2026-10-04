@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MathFlow — Interactive Learning Journey</title>
+<style>
+:root{--bg:#071426;--panel:#10213a;--panel2:#173254;--text:#f4f8ff;--muted:#b6c7dd;--line:#2c4b70;--a:#63e6ff;--b:#a78bfa;--good:#67e8a5;--gold:#ffd166;--pink:#ff7ab6}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 80% 0%,#63e6ff22,transparent 28%),radial-gradient(circle at 10% 90%,#a78bfa20,transparent 30%),linear-gradient(135deg,#071426,#0b1730 55%,#081322);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+.app{display:flex;min-height:100vh}
+.side{position:fixed;inset:0 auto 0 0;width:270px;padding:22px 15px;background:#071426f2;border-right:1px solid var(--line);z-index:3;backdrop-filter:blur(12px)}
+.brand{padding:8px 12px 20px}.brand b{font-size:30px;letter-spacing:-.04em}.brand small{display:block;color:var(--muted);margin-top:5px}
+.nav{display:grid;gap:7px}.nav button{background:transparent;border:1px solid transparent;color:var(--muted);text-align:left;padding:11px 12px;border-radius:13px;cursor:pointer;font-weight:650;transition:.18s}
+.nav button:hover,.nav button.active{background:linear-gradient(90deg,#173454,#142844);color:#fff;border-color:#31557e;transform:translateX(2px)}.nav button.active{box-shadow:inset 3px 0 var(--a),0 8px 22px #0002}
+.prog{margin:8px 10px 18px}.bar{height:7px;background:#1b2d49;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b),var(--pink));border-radius:99px;transition:.3s}
+.main{margin-left:270px;width:calc(100% - 270px);max-width:1280px;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;color:var(--muted);font-size:13px}.badge{border:1px solid #31557e;border-radius:99px;padding:7px 11px;color:var(--a);background:#0d2139}
+.page{display:none}.page.active{display:block;animation:rise .25s ease}@keyframes rise{from{opacity:.3;transform:translateY(7px)}to{opacity:1;transform:none}}
+.hero,.card{background:linear-gradient(145deg,#142a48f5,#0b1a30f5);border:1px solid #315075;border-radius:24px;padding:28px;box-shadow:0 22px 65px #0004}
+.hero{min-height:390px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;position:relative}.hero:after{content:"✦  ✧  ✦";position:absolute;right:28px;top:22px;color:#63e6ff66;font-size:30px;letter-spacing:10px}
+.ey{font-size:12px;font-weight:850;letter-spacing:.14em;color:var(--a);text-transform:uppercase}h1{font-size:clamp(38px,5vw,64px);line-height:1.02;margin:12px 0;letter-spacing:-.04em}h2{margin:0 0 10px;font-size:31px;letter-spacing:-.02em}h3{margin-top:0}p{line-height:1.65;color:#d8e5f4}
+.story{font-size:18px;border-left:3px solid var(--a);padding-left:16px;max-width:900px}.formula{font-size:32px;font-weight:900;text-align:center;padding:18px;border:1px dashed #5a7898;border-radius:17px;background:#071526;margin:16px 0}
+.notice{padding:13px 15px;border-radius:14px;background:#63e6ff0e;border:1px solid #63e6ff2b;color:#d5f5ff;margin:15px 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.grid4{grid-template-columns:repeat(4,1fr)}
+label{display:block;color:var(--muted);font-size:13px;margin:13px 0 6px}input,textarea{width:100%;background:#08172b;color:#fff;border:1px solid #315075;border-radius:12px;padding:12px;outline:0;font:inherit}input:focus,textarea:focus{border-color:var(--a);box-shadow:0 0 0 3px #63e6ff12}textarea{min-height:90px;resize:vertical}
+.question{padding:18px;margin:15px 0;background:#08172b;border:1px solid #294a70;border-radius:17px}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{border:1px solid #315075;background:#152a46;color:#fff;padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:750;transition:.18s}.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}.primary{background:linear-gradient(90deg,#178fb3,#7658d6);border:0}.good{color:var(--good);border-color:#55e6a555}
+.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:18px 0}.gate{padding:16px;border:1px solid #2d4d72;border-radius:16px;background:linear-gradient(145deg,#0b1b31,#0c2038);cursor:pointer;transition:.18s}.gate:hover{transform:translateY(-2px);border-color:#4d759f}.gate.sel{border-color:var(--a);box-shadow:0 0 0 2px #63e6ff12}.gate.done{border-color:#55e6a566;background:#0d2630}.gate b{display:block;color:var(--a);font-size:11px}.gate small{color:var(--muted);display:block;margin-top:4px}.clue{margin-top:7px;padding:9px 10px;background:#10243c;border-radius:10px;color:#bfd1e7;font-size:13px}
+.table-wrap{overflow:auto;border:1px solid #2d4d72;border-radius:15px;margin:15px 0}.data-table{width:100%;border-collapse:collapse;min-width:560px}.data-table th,.data-table td{padding:11px 13px;border-bottom:1px solid #294663;text-align:left}.data-table th{background:#122943;color:#8feaff;font-size:12px;text-transform:uppercase;letter-spacing:.05em}.data-table td{background:#09182b}.data-table tr:last-child td{border-bottom:0}
+.mission-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.meta-chip{padding:13px 14px;border:1px solid #315075;border-radius:14px;background:#0a1a30}.meta-chip b{display:block;color:#8feaff;font-size:12px;margin-bottom:4px}
+.locked{border:1px dashed #52708f;border-radius:18px;padding:22px;background:linear-gradient(145deg,#0a1729,#0c1d32);text-align:center}.lock-icon{font-size:40px}.locked h3{margin:8px 0}.locked p{max-width:650px;margin:0 auto;color:#b9cbe0}
+.code{font-size:39px;font-weight:900;letter-spacing:.2em;text-align:center;padding:20px;background:#091526;border:1px solid var(--a);border-radius:16px}
+@media(max-width:850px){.side{width:215px}.main{margin-left:215px;width:calc(100% - 215px)}.grid,.gates{grid-template-columns:1fr 1fr}.grid4{grid-template-columns:1fr 1fr}.mission-meta{grid-template-columns:1fr}}
+@media(max-width:620px){.app{display:block}.side{position:relative;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}.main{margin:0;width:100%;padding:18px}.grid,.gates{grid-template-columns:1fr 1fr}.mission-meta{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 5%,#62d8ff18,transparent 25%),radial-gradient(circle at 15% 90%,#8b7cff18,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+.app{display:flex;min-height:100vh}.side{position:fixed;inset:0 auto 0 0;width:265px;padding:24px 15px;background:#08111ff5;border-right:1px solid var(--line);z-index:3}.brand{padding:5px 12px 22px}.brand b{font-size:27px}.brand small{display:block;color:var(--muted);margin-top:4px}.nav{display:grid;gap:6px}.nav button{background:none;border:1px solid transparent;color:var(--muted);text-align:left;padding:10px 12px;border-radius:11px;cursor:pointer}.nav button:hover,.nav button.active{background:var(--panel2);color:#fff;border-color:var(--line)}.nav button.active{box-shadow:inset 3px 0 var(--a)}.prog{margin:8px 10px 18px}.bar{height:6px;background:#1b2b43;border-radius:9px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));border-radius:9px}
+.main{margin-left:265px;width:calc(100% - 265px);max-width:1250px;padding:28px}.top{display:flex;justify-content:space-between;margin-bottom:20px;color:var(--muted);font-size:13px}.badge{border:1px solid var(--line);border-radius:99px;padding:6px 10px;color:var(--a)}
+.page{display:none}.page.active{display:block}.hero,.card{background:linear-gradient(145deg,#15243bf5,#0c192bf5);border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 18px 55px #0003}.hero{min-height:350px;display:flex;flex-direction:column;justify-content:center}.ey{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--a);text-transform:uppercase}h1{font-size:clamp(36px,5vw,60px);line-height:1.03;margin:12px 0}h2{margin:0 0 10px;font-size:30px}p{line-height:1.65;color:#d4e0ef}.story{font-size:18px;border-left:3px solid var(--a);padding-left:16px}.notice{padding:13px;border-radius:12px;background:#62d8ff0d;border:1px solid #62d8ff2b;color:#cfefff;margin:15px 0}.formula{font-size:32px;font-weight:900;text-align:center;padding:18px;border:1px dashed #496783;border-radius:15px;background:#091526;margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.grid4{grid-template-columns:repeat(4,1fr)}label{display:block;color:var(--muted);font-size:13px;margin:13px 0 6px}input,textarea{width:100%;background:#0a1729;color:#fff;border:1px solid var(--line);border-radius:11px;padding:11px;outline:0}textarea{min-height:90px;resize:vertical}.question{padding:17px;margin:15px 0;background:#0a1729;border:1px solid var(--line);border-radius:15px}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#14243a;color:#fff;padding:11px 15px;border-radius:11px;cursor:pointer}.primary{background:linear-gradient(90deg,#197fa7,#6656c8);border:0}.good{color:var(--good);border-color:#55e6a555}.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.gate{padding:15px;border:1px solid var(--line);border-radius:15px;background:#0b182b;cursor:pointer}.gate.sel{border-color:var(--a)}.gate.done{border-color:#55e6a566}.gate b{display:block;color:var(--a);font-size:11px}.gate small{color:var(--muted)}.clue{margin-top:7px;padding:9px;background:#101f34;border-radius:9px;color:#b9cce1;font-size:13px}.code{font-size:39px;font-weight:900;letter-spacing:.2em;text-align:center;padding:20px;background:#091526;border:1px solid var(--a);border-radius:16px}
+@media(max-width:850px){.side{width:215px}.main{margin-left:215px;width:calc(100% - 215px)}.grid,.gates{grid-template-columns:1fr 1fr}.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.app{display:block}.side{position:relative;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}.main{margin:0;width:100%;padding:18px}.grid,.gates{grid-template-columns:1fr 1fr}}
+
+.formula-title{font-size:1.05rem;font-weight:800;margin-bottom:8px}
+.formula-main{font-size:2rem;font-weight:900;letter-spacing:.5px;margin:6px 0 8px}
+.formula-note{font-size:.92rem;line-height:1.5;opacity:.9}
+.concept-definitions{margin:16px 0 6px;padding:18px;font-size:14px;border:1px solid #315075;border-radius:17px;background:linear-gradient(145deg,#0b1d33,#0a1729)}
+.concept-definitions h3{margin:0 0 12px;color:#8feaff;font-size:16px}
+.symbol-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:12px}
+.symbol-table th,.symbol-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid #294663;text-align:left;vertical-align:top}
+.symbol-table th{background:#122943;color:#8feaff;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.symbol-table td{background:#09182b}.symbol-table tr:last-child td{border-bottom:0}
+.symbol{font-weight:900;font-size:15px;color:#fff;white-space:nowrap}
+.answer-status{min-height:22px;margin-top:6px;font-size:13px;font-weight:800}.answer-status.ok{color:var(--good)}.answer-status.bad{color:#ff9aa8}.gate-lock{margin:18px 0}.optional-tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#ffd16618;border:1px solid #ffd16655;color:#ffd166;font-size:12px;font-weight:800}.story-section{padding:16px 18px;border:1px solid #315075;border-radius:16px;background:#0a1a30;margin:14px 0}.story-section h3{color:#8feaff;margin:0 0 7px}.locked-soft{opacity:.92}.gate.disabled{cursor:not-allowed;filter:saturate(.65)}
+
+/* Cross-device responsive layer: Android, iPhone/iPad, tablet, laptop & desktop */
+html{width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{width:100%;min-width:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+img,svg,video,canvas{max-width:100%;height:auto}
+button,input,textarea,select{font:inherit;max-width:100%;box-sizing:border-box}
+input,textarea,button{-webkit-appearance:none;appearance:none}
+input,textarea{font-size:16px} /* prevents iOS Safari auto-zoom */
+.card,.box,.table-wrap,.formula,.question{max-width:100%;box-sizing:border-box}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.data-table,.symbol-table{min-width:620px}
+.nav{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.nav button{flex:0 0 auto;white-space:nowrap}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.actions .btn{min-height:44px}
+@media (max-width:900px){
+  .container{width:min(100% - 24px,100%)}
+  .grid{grid-template-columns:1fr!important}
+  .card{padding:18px!important}
+  h1{font-size:clamp(1.65rem,6vw,2.4rem)}
+  h2{font-size:clamp(1.3rem,5vw,1.9rem)}
+  .formula-main{font-size:clamp(1.45rem,7vw,2rem)}
+}
+@media (max-width:600px){
+  .container{width:calc(100% - 16px)}
+  .card{padding:14px!important;border-radius:16px!important}
+  .actions{flex-direction:column}
+  .actions .btn{width:100%;justify-content:center}
+  .nav{gap:6px!important;padding-bottom:6px}
+  .nav button{min-height:42px;padding:9px 11px!important}
+  .mission-meta{grid-template-columns:1fr!important}
+  .data-table,.symbol-table{min-width:560px}
+  .symbol-table th,.symbol-table td{padding:8px 9px;font-size:12px}
+  .concept-definitions{padding:12px!important}
+  .formula{padding:14px!important}
+  textarea{min-height:110px}
+}
+@media (pointer:coarse){
+  button,.btn,input,textarea,select{min-height:44px}
+}
+
+/* iOS Safari / touch-device compatibility */
+html{min-height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{min-height:100%;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+button,.btn,.gate,.nav button{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+input,textarea{font-size:16px!important;-webkit-user-select:text;user-select:text}
+@media(max-width:600px){.hero,.card{padding:20px;border-radius:18px}.grid,.gates,.grid4{grid-template-columns:1fr}.actions .btn{width:100%;min-height:46px}.nav{display:flex;overflow-x:auto;gap:7px;padding-bottom:4px;-webkit-overflow-scrolling:touch}.nav button{min-width:max-content;min-height:44px}.side{padding:14px 12px}.main{padding:14px}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}}
+</style>
+</head>
+<body>
+<div class="app"><aside class="side">
+<div class="brand"><b>MathFlow</b><small>Interactive Learning Journey</small></div>
+<div class="prog"><div>Perjalanan belajar</div><div class="bar"><i id="pb"></i></div></div>
+<nav class="nav" id="nav"></nav>
+</aside><main class="main">
+<div class="top"><span id="crumb">MathFlow / Opening Mission</span><span class="badge" id="badge">Belum ada kelompok</span></div>
+
+<section class="page active" id="opening"><div class="hero">
+<div class="ey">Mission Start · Pojok Kreatif Kotabumi</div>
+<h1>Siap memulai<br>MathFlow? ✦</h1>
+<div class="story-section"><h3>🌿 Apa itu Pojok Kreatif Kotabumi?</h3><p>Bayangkan sebuah ruang tempat ide-ide anak muda, karya tangan, cerita lokal, dan semangat gotong royong bertemu. Dalam MathFlow, <b>Pojok Kreatif Kotabumi</b> adalah ruang kreatif fiktif yang terinspirasi dari semangat masyarakat Kotabumi untuk berkarya, bekerja sama, dan mengembangkan potensi di sekitar mereka. Di sini, sebuah kelompok tidak hanya membuat sesuatu yang menarik, tetapi juga belajar mengelola sumber daya dengan bijak.</p><p>Suatu sore, tim kalian mendapat kesempatan membantu menyiapkan dana untuk kegiatan kreatif. Ada ide membuat karya, mengemas produk, berbagi keterampilan, dan menghadirkan kegiatan yang bisa dinikmati bersama. Namun, satu pertanyaan penting muncul: <b>kalau dana berkembang sedikit demi sedikit setiap bulan, kapan jumlahnya cukup untuk menjalankan rencana?</b></p></div>
+<p class="story">Untuk menjalankan misi tersebut, tersedia modal awal <b>Rp3.000.000</b>. Dana berkembang dengan <b>bunga tunggal 4% per bulan</b>. Tim menargetkan dana sebesar <b>Rp3.600.000</b>.</p>
+<div class="mission-meta">
+  <div class="meta-chip"><b>Modal awal</b>Rp3.000.000</div>
+  <div class="meta-chip"><b>Bunga tunggal</b>4% per bulan</div>
+  <div class="meta-chip"><b>Target</b>Rp3.600.000</div>
+</div>
+<div class="table-wrap"><table class="data-table">
+<thead><tr><th>Informasi</th><th>Nilai</th></tr></thead>
+<tbody>
+<tr><td>Modal awal</td><td>Rp3.000.000</td></tr>
+<tr><td>Bunga tunggal</td><td>4% per bulan</td></tr>
+<tr><td>Target dana</td><td>Rp3.600.000</td></tr>
+</tbody></table></div>
+<p><b>🎯 Pertanyaan pemantik untuk perjalanan kalian:</b></p>
+<div class="formula">“Berapa bulan yang dibutuhkan agar dana mencapai Rp3.600.000?”</div>
+<div class="notice">💡 Simpan pertanyaan ini. Kalian akan kembali ke misi ini setelah mengamati pola, mencoba strategi, dan menemukan konsep bunga tunggal.</div>
+</div><div class="actions"><span></span><button class="btn primary" onclick="go('team')">Mulai Misi →</button></div></section>
+
+<section class="page" id="team"><div class="card"><div class="ey">Team</div><h2>Susun Tim Misi</h2><p>Masukkan nama kelompok dan empat anggota. Setiap anggota menjadi penanggung jawab satu gerbang.</p>
+<label>Nama Kelompok</label><input id="group">
+<div class="grid"><div><label>Anggota 1 · Gerbang 1</label><input id="m1"></div><div><label>Anggota 2 · Gerbang 2</label><input id="m2"></div><div><label>Anggota 3 · Gerbang 3</label><input id="m3"></div><div><label>Anggota 4 · Gerbang 4</label><input id="m4"></div></div></div>
+<div class="actions"><button class="btn" onclick="go('opening')">← Kembali</button><button class="btn primary" onclick="teamAndStart()">Simpan Tim & Mulai Perjalanan →</button></div></section>
+
+<section class="page" id="discover"><div class="card"><div class="ey">Discover</div><h2>Temukan Polanya</h2><p>Amati perubahan jumlah uang. Jangan buru-buru mencari rumus.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Periode</th><th>Jumlah uang</th></tr></thead><tbody>
+<tr><td>Bulan 0</td><td>Rp2.000.000</td></tr><tr><td>Bulan 1</td><td>Rp2.060.000</td></tr><tr><td>Bulan 2</td><td>Rp2.120.000</td></tr><tr><td>Bulan 3</td><td>Rp2.180.000</td></tr>
+</tbody></table></div>
+<div class="question"><label>1. Berapa pertambahan uang setiap bulan?</label><input id="d1" data-num="60000"><div class="answer-status" id="status-d1"></div><label>2. Mengapa pertambahannya tetap?</label><textarea id="d2"></textarea><label>3. Jika pola tetap, berapa jumlah pada bulan ke-4?</label><input id="d3" data-num="2240000"><div class="answer-status" id="status-d3"></div></div></div>
+<div class="actions"><button class="btn" onclick="go('team')">← Kembali</button><button class="btn primary" onclick="save('discover');go('explore')">Simpan Temuan →</button></div></section>
+
+<section class="page" id="explore"><div class="card"><div class="ey">Explore</div><h2>Uji Pola di Situasi Baru</h2><p>Modal Rp1.500.000 dengan bunga tunggal 2% per bulan.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Bulan</th><th>Jumlah uang</th></tr></thead><tbody>
+<tr><td>1</td><td>Rp1.530.000</td></tr><tr><td>2</td><td>Rp1.560.000</td></tr><tr><td>3</td><td>Rp1.590.000</td></tr>
+</tbody></table></div>
+<div class="question"><label>1. Berapa jumlah uang setelah 5 bulan?</label><input id="e1" data-num="1650000"><div class="answer-status" id="status-e1"></div><label>2. Berapa pertambahan uang setiap bulan?</label><input id="e2" data-num="30000"><div class="answer-status" id="status-e2"></div><label>3. Apa hubungan modal awal, persentase bunga, dan waktu dengan pertambahan uang?</label><textarea id="e3"></textarea></div></div>
+<div class="actions"><button class="btn" onclick="go('discover')">← Kembali</button><button class="btn primary" onclick="save('explore');go('concept')">Lanjut ke Concept →</button></div></section>
+
+<section class="page" id="concept"><div class="card"><div class="ey">Concept</div><h2>Rangkai Temuanmu ✦</h2>
+<p>Kalian sudah menemukan pola dari dua situasi. Sekarang ubah pola itu menjadi hubungan yang lebih umum.</p>
+<div class="notice">🔎 Di bagian ini barulah simbol matematika diperkenalkan. Susun dari langkah paling sederhana menuju bentuk umum.</div>
+<div class="question">
+<label>1. Misalkan modal awal ditulis <b>M₀</b> dan bunga dalam satu periode ditulis <b>B</b>. Setelah satu periode, jumlah uang menjadi apa?</label>
+<div class="clue">💭 Petunjuk: pikirkan jumlah uang awal, lalu apa yang ditambahkan setelah satu periode.</div>
+<input id="c1" placeholder="Tulis hasil pemikiranmu di sini..."><div class="answer-status" id="status-c1"></div>
+
+<label>2. Jika setiap periode mendapat bunga sebesar <b>B</b>, bagaimana menuliskan total bunga selama <b>n</b> periode?</label>
+<div class="clue">💭 Petunjuk: gunakan pola yang kalian temukan di Discover dan Explore. Berapa kali bunga satu periode diperoleh?</div>
+<input id="c2" placeholder="Tulis hasil pemikiranmu di sini..."><div class="answer-status" id="status-c2"></div>
+
+<label>3. Jumlah akhir diperoleh dari modal awal + total bunga. Bagaimana bentuknya?</label>
+<div class="clue">💭 Petunjuk: gabungkan modal awal dengan hasil yang kalian dapat pada nomor 2.</div>
+<input id="c3" placeholder="Tulis hasil pemikiranmu di sini..."><div class="answer-status" id="status-c3"></div>
+
+<label>4. Jika bunga satu periode sebesar <b>i</b> bagian dari modal awal, bagaimana hubungan <b>B</b> dengan modal awal dan <b>i</b>?</label>
+<div class="clue">💭 Petunjuk: pikirkan arti persentase bunga terhadap modal awal. Tidak perlu menggunakan <b>n</b> karena baru membahas satu periode.</div>
+<input id="c4" placeholder="Tulis hasil pemikiranmu di sini..."><div class="answer-status" id="status-c4"></div>
+
+<label>5. Sekarang gabungkan semuanya menjadi bentuk umum jumlah akhir setelah <b>n</b> periode. Tulis bentuk yang menurut kelompokmu paling tepat.</label>
+<div class="clue">💭 Petunjuk: gunakan hasil nomor 3 dan 4. Bentuk yang setara secara matematika tetap dapat digunakan.</div>
+<input id="c5" placeholder="Tulis hasil pemikiranmu di sini..."><div class="answer-status" id="status-c5"></div>
+</div>
+<div class="notice">💡 Petunjuk hanya membantu arah berpikir. Jawab dengan hasil temuan kelompokmu sendiri.</div>
+<div class="formula" id="formula" style="display:none">
+  <div class="formula-title">🎉 CONCEPT FOUND!</div>
+  <div class="formula-main">Mₙ = M₀(1 + i·n)</div>
+  <div class="formula-note">Inilah bentuk umum bunga tunggal yang kalian temukan dari hasil pengamatan dan penyusunan konsep.</div>
+
+  <div class="concept-definitions">
+    <h3>🔎 Arti setiap simbol</h3>
+    <div class="table-wrap">
+      <table class="symbol-table">
+        <thead>
+          <tr><th>Simbol</th><th>Artinya</th><th>Keterangan</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="symbol">M₀</td><td><b>Modal awal</b></td><td>Jumlah uang yang dimiliki atau disimpan pada awal.</td></tr>
+          <tr><td class="symbol">Mₙ</td><td><b>Jumlah uang akhir</b></td><td>Jumlah uang setelah mendapatkan bunga selama <b>n</b> periode.</td></tr>
+          <tr><td class="symbol">i</td><td><b>Suku bunga per periode</b></td><td>Besarnya bunga setiap periode. Dalam perhitungan, persentase ditulis sebagai desimal, misalnya <b>4% = 0,04</b>.</td></tr>
+          <tr><td class="symbol">n</td><td><b>Banyaknya periode</b></td><td>Lama waktu selama bunga diberikan, misalnya jumlah bulan atau tahun sesuai periode suku bunga.</td></tr>
+          <tr><td class="symbol">1</td><td><b>Bagian modal awal</b></td><td>Menunjukkan bahwa jumlah akhir terdiri dari modal awal ditambah pertumbuhan bunga.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notice">💡 Ingat: satuan waktu <b>n</b> harus sesuai dengan periode <b>i</b>. Jika <b>i</b> per bulan, maka <b>n</b> dihitung dalam bulan.</div>
+  </div>
+</div>
+<div class="actions">
+  <button class="btn" onclick="go('explore')">← Kembali</button>
+  <button class="btn primary" id="conceptCheckBtn" onclick="checkConcept()">Periksa Konsep →</button>
+  <button class="btn primary" id="conceptNextBtn" style="display:none" onclick="go('gates')">Lanjut ke The Four Gates →</button>
+</div></section>
+
+<section class="page" id="gates"><div class="card"><div class="ey">The Four Gates</div><h2>Empat Gerbang Penjaga Konsep</h2><p>Semua gerbang terlihat sejak awal. Tombol berikut mengarahkan perjalanan dari Gerbang 1 sampai 4.</p>
+<div class="gates"><div class="gate" id="gt1" onclick="gate(1)"><b>GERBANG 1</b><strong>Jejak Jumlah Akhir</strong><small>Temukan jumlah akhir.</small></div><div class="gate" id="gt2" onclick="gate(2)"><b>GERBANG 2</b><strong>Jejak Bunga</strong><small>Temukan besar bunga.</small></div><div class="gate" id="gt3" onclick="gate(3)"><b>GERBANG 3</b><strong>Jejak Modal</strong><small>Temukan modal awal.</small></div><div class="gate" id="gt4" onclick="gate(4)"><b>GERBANG 4</b><strong>Jejak Waktu</strong><small>Tentukan waktu.</small></div></div>
+<div id="gateLock" class="locked gate-lock"><div class="lock-icon">🔒</div><h3>The Four Gates masih terkunci</h3><p>Selesaikan <b>Concept</b> terlebih dahulu. Empat gerbang tetap terlihat, tetapi soal dan jawaban baru dapat digunakan setelah konsep ditemukan.</p></div><div id="gatebox"></div><div class="actions"><button class="btn" onclick="go('concept')">← Kembali</button><button class="btn primary" onclick="nextGate()">Gerbang Berikutnya →</button></div></div></section>
+
+<section class="page" id="challenge"><div class="card"><div class="ey"><span class="optional-tag">OPSIONAL</span> · Challenge</div><h2>Tantangan Tim · Misi Tambahan ⚡</h2><p><b>Boleh dikerjakan, boleh dilewati.</b> Challenge ini merupakan latihan tambahan di luar alur inti Discovery Learning, jadi tidak mengunci perjalanan menuju Final Quest.</p><div class="question"><p><b>Konteks:</b> Pojok Kreatif Kotabumi ingin menyiapkan dana untuk sebuah kegiatan bersama. Tim memiliki Rp2.400.000. Ada dua pilihan: <b>A</b>, dana berkembang dengan bunga tunggal 5% per tahun selama 3 tahun; atau <b>B</b>, ada kerja sama yang memberi tambahan tetap Rp330.000 setelah 3 tahun. Target dana kegiatan adalah Rp2.800.000. Tim perlu membandingkan hasil kedua pilihan sebelum menentukan strategi.</p><label>Jika menggunakan pilihan A, berapa jumlah dana setelah 3 tahun?</label><input id="ch1"><label>Setelah membandingkan pilihan A dan B, apakah salah satu pilihan sudah mencapai target Rp2.800.000? Jelaskan keputusan kelompokmu. <span class="optional-tag">OPSIONAL</span></label><textarea id="ch2"></textarea><div class="notice">💡 Tantangan ini untuk menguji penerapan konsep pada situasi baru. Tidak perlu dikerjakan jika kelompok ingin langsung melanjutkan ke Final Quest.</div></div></div>
+<div class="actions"><button class="btn" onclick="go('gates')">← Kembali</button><button class="btn primary" onclick="save('challenge');go('final')">Lanjut ke Final Quest →</button></div></section>
+
+<section class="page" id="final"><div class="card"><div class="ey">Final Quest · 🔒 Locked</div><h2>Kembali ke Misi Awal</h2>
+<p class="story">Pojok Kreatif Kotabumi memiliki modal Rp3.000.000, bunga tunggal 4% per bulan, dan target Rp3.600.000.</p>
+<div id="finalLocked" class="locked"><div class="lock-icon">🔒</div><h3>Final Quest masih terkunci</h3><p>Selesaikan seluruh perjalanan belajar terlebih dahulu. Halaman ini sudah bisa dilihat, tetapi kolom jawaban akan terbuka setelah <b>Team → Discover → Explore → Concept → 4 Gates → Challenge</b> selesai.</p></div>
+<div id="finalForm" style="display:none"><div class="question"><label>Berapa bulan yang dibutuhkan untuk mencapai target?</label><input id="f1"><label>Jelaskan alasan atau perhitunganmu.</label><textarea id="f2"></textarea></div><div class="notice">🎯 Setelah jawaban benar, Secret Code akan terbuka.</div></div>
+</div>
+<div class="actions"><button class="btn" onclick="go('challenge')">← Kembali</button><button id="finalBtn" class="btn primary" onclick="finish()">Buka Secret Code →</button></div></section>
+
+<section class="page" id="code"><div class="card"><div class="ey">Secret Code</div><h2>Misi Berhasil</h2><p>Sampaikan kode ini kepada guru untuk diverifikasi di Gatekeeper.</p><div class="code" id="scode">—</div><p class="notice">Kode bersama semua kelompok: digit dari Gerbang 1–4 lalu digit Final Quest.</p></div>
+<div class="actions"><span></span><button class="btn primary" onclick="go('reflect')">Lanjut ke Reflect →</button></div></section>
+
+<section class="page" id="reflect"><div class="card"><div class="ey">Reflect · Learning Journal</div><h2>Jurnal Belajar MathFlow</h2><p>Jawaban refleksi ini akan ikut masuk ke PDF bersama seluruh perjalanan dan jawabanmu.</p>
+<label>1. Pola apa yang kamu temukan tentang bunga tunggal?</label><textarea id="r1"></textarea><label>2. Bagaimana pemahamanmu tentang hubungan modal awal, bunga, waktu, dan jumlah akhir?</label><textarea id="r2"></textarea><label>3. Bagian mana yang paling membuatmu berpikir?</label><textarea id="r3"></textarea><label>4. Bagaimana kerja kelompok membantu proses belajar?</label><textarea id="r4"></textarea><label>5. Bagaimana menjelaskan cara menentukan waktu untuk mencapai target?</label><textarea id="r5"></textarea></div>
+<div class="actions"><button class="btn" onclick="go('code')">← Kembali</button><button class="btn good" onclick="save('reflect');pdf()">📥 Unduh Jurnal Belajar PDF</button></div></section>
+</main></div>
+
+<script>
+const stages=[['opening','Opening Mission'],['team','Team'],['discover','Discover'],['explore','Explore'],['concept','Concept'],['gates','The Four Gates'],['challenge','Challenge'],['final','Final Quest'],['code','Secret Code'],['reflect','Reflect']];
+const DEFAULT_STATE={group:'',members:['','','',''],a:{},done:[false,false,false,false],gate:1,code:'',conceptDone:false};
+let memoryState='';
+function storageGet(){try{return localStorage.getItem('mathflow')}catch(e){return memoryState||null}}
+function storageSet(value){try{localStorage.setItem('mathflow',value)}catch(e){memoryState=value}}
+let S=JSON.parse(storageGet()||JSON.stringify(DEFAULT_STATE));
+const q={1:{t:'Jejak Jumlah Akhir',p:'Modal awal Rp1.800.000 dengan bunga tunggal 5% per tahun selama 2 tahun. Berapa jumlah akhir?',id:'ga1',ans:'1980000',c:['Apa modal awalnya?','Berapa periode yang berlangsung?','Bagaimana bunga bertambah tiap periode?']},2:{t:'Jejak Bunga',p:'Modal awal Rp4.000.000 dengan bunga tunggal 3% per tahun selama 4 tahun. Berapa total bunga?',id:'ga2',ans:'480000',c:['Perhatikan modal dan persentase bunga.','Berapa lama modal menghasilkan bunga?']},3:{t:'Jejak Modal',p:'Jumlah akhir Rp3.360.000 diperoleh dengan bunga tunggal 4% per tahun selama 3 tahun. Berapa modal awal?',id:'ga3',ans:'3000000',c:['Bandingkan jumlah akhir dengan pertumbuhan selama beberapa periode.','Apa hubungan jumlah akhir dengan modal awal?']},4:{t:'Jejak Waktu',p:'Modal awal Rp2.000.000 berkembang dengan bunga tunggal 6% per tahun hingga menjadi Rp2.720.000. Berapa tahun diperlukan?',id:'ga4',ans:'6',c:['Bandingkan jumlah akhir dengan modal awal.','Perhatikan pertumbuhan tiap tahun.']}};
+function save(k){document.querySelectorAll('#'+k+' input,#'+k+' textarea').forEach(x=>S.a[x.id]=x.value);storageSet(JSON.stringify(S))}
+function tone(type){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);const ok=type==='ok';o.type=ok?'sine':'triangle';o.frequency.setValueAtTime(ok?660:220,c.currentTime);o.frequency.exponentialRampToValueAtTime(ok?880:150,c.currentTime+(ok?.16:.18));g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(.12,c.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+(ok?.22:.24));o.start();o.stop(c.currentTime+(ok?.23:.25));}catch(e){}}
+function normNum(v){return String(v||'').replace(/[^0-9]/g,'')}
+function teamAndStart(){const g=document.getElementById('group').value.trim();const ms=[1,2,3,4].map(i=>document.getElementById('m'+i).value.trim());if(!g||ms.some(x=>!x)){tone('bad');alert('Nama kelompok dan seluruh 4 anggota wajib diisi sebelum memulai perjalanan.');return}team();tone('ok');go('discover')}
+function checkEarlyNumber(id){const el=document.getElementById(id);const status=document.getElementById('status-'+id);if(!el||!status)return;const v=normNum(el.value);if(!v){status.textContent='';status.className='answer-status';return}const ok=v===el.dataset.num;status.textContent=ok?'✓ Jawaban benar':'✕ Belum tepat — coba cek kembali polanya';status.className='answer-status '+(ok?'ok':'bad');if(ok&&!el.dataset.played){tone('ok');el.dataset.played='1'}else if(!ok)el.dataset.played='';}
+function bindEarlyChecks(){['d1','d3','e1','e2'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',()=>checkEarlyNumber(id));el.addEventListener('blur',()=>{if(el.value && normNum(el.value)!==el.dataset.num)tone('bad')});checkEarlyNumber(id)}})}
+function team(){S.group=document.getElementById('group').value.trim();S.members=[1,2,3,4].map(i=>document.getElementById('m'+i).value.trim());storageSet(JSON.stringify(S));badge()}
+function badge(){document.getElementById('badge').textContent=S.group||'Belum ada kelompok'}
+function completedBeforeFinal(){
+ return !!(S.group && S.members.every(x=>x.trim()) &&
+   S.a.d1 && S.a.d2 && S.a.d3 &&
+   S.a.e1 && S.a.e2 && S.a.e3 &&
+   S.conceptDone &&
+   S.done.every(Boolean));
+}
+function setConceptStatus(id, ok){
+ const input=document.getElementById(id);
+ const el=document.getElementById('status-'+id);
+ if(!input||!el)return;
+ if(!String(input.value||'').trim()){
+   el.textContent='';
+   el.className='answer-status';
+   return;
+ }
+ el.textContent=ok?'✓ Jawaban benar':'↻ Periksa lagi';
+ el.className='answer-status '+(ok?'ok':'bad');
+}
+function bindConceptChecks(){
+ ['c1','c2','c3','c4','c5'].forEach(id=>{
+   const el=document.getElementById(id);
+   if(!el)return;
+   el.addEventListener('input',()=>checkConceptAnswers(false));
+   el.addEventListener('blur',()=>checkConceptAnswers(false));
+ });
+}
+function checkConceptAnswers(showAlert=true){
+ const normalize = (raw) => String(raw || '')
+   .toLowerCase().replace(/\s+/g,'').replace(/₀/g,'0').replace(/ₙ/g,'n')
+   .replace(/mo/g,'m0').replace(/[×x*·]/g,'*').replace(/−/g,'-');
+ const v=['c1','c2','c3','c4','c5'].map(id=>normalize(document.getElementById(id).value));
+ const ok1=v[0]==='m0+b'||v[0]==='b+m0';
+ const ok2=v[1]==='b*n'||v[1]==='n*b';
+ const ok3=v[2]==='m0+b*n'||v[2]==='m0+n*b';
+ const ok4=v[3]==='b=m0*i'||v[3]==='b=i*m0'||v[3]==='m0*i'||v[3]==='i*m0';
+ const ok5=v[4]==='mn=m0*(1+i*n)'||v[4]==='mn=m0*(1+n*i)'||v[4]==='m0*(1+i*n)'||v[4]==='m0*(1+n*i)'||v[4]==='mn=m0+m0*i*n'||v[4]==='mn=m0+m0*n*i'||v[4]==='m0+m0*i*n'||v[4]==='m0+m0*n*i';
+ const oks=[ok1,ok2,ok3,ok4,ok5];
+ ['c1','c2','c3','c4','c5'].forEach((id,i)=>setConceptStatus(id,oks[i]));
+ return oks;
+}
+function checkConcept(){
+ const oks=checkConceptAnswers(true);
+ const ok=oks.every(Boolean);
+ save('concept');
+ if(!ok){
+   tone('bad');
+   alert('Masih ada jawaban yang perlu diperiksa lagi. Perbaiki bagian yang bertanda ↻ Periksa lagi, lalu coba kembali.');
+   return;
+ }
+ tone('ok');
+ document.getElementById('formula').style.display='block';
+ document.getElementById('conceptCheckBtn').style.display='none';
+ document.getElementById('conceptNextBtn').style.display='inline-flex';
+ S.conceptDone=true;
+ storageSet(JSON.stringify(S));
+ document.getElementById('formula').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function go(k){
+ if(!S.group && k!=='opening' && k!=='team'){k='team';}
+ if(k==='code' && !S.code){return;}
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(k).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.k===k));
+ let i=stages.findIndex(x=>x[0]===k);document.getElementById('pb').style.width=(i/(stages.length-1)*100)+'%';document.getElementById('crumb').textContent='MathFlow / '+stages[i][1];
+ if(k==='gates')renderGate();
+ if(k==='final')renderFinal();
+ if(k==='concept' && S.conceptDone){
+   document.getElementById('formula').style.display='block';
+   document.getElementById('conceptCheckBtn').style.display='none';
+   document.getElementById('conceptNextBtn').style.display='inline-flex';
+ }
+ scrollTo(0,0)}
+function gate(n){if(!S.conceptDone){renderGate();return}S.gate=n;renderGate()}
+function renderFinal(){
+ const unlocked=completedBeforeFinal();
+ document.getElementById('finalLocked').style.display=unlocked?'none':'block';
+ document.getElementById('finalForm').style.display=unlocked?'block':'none';
+ document.getElementById('finalBtn').disabled=!unlocked;
+ document.getElementById('finalBtn').style.opacity=unlocked?'1':'.45';
+ document.getElementById('finalBtn').style.cursor=unlocked?'pointer':'not-allowed';
+}
+function renderGate(){const lock=!S.conceptDone;document.getElementById('gateLock').style.display=lock?'block':'none';document.getElementById('gatebox').style.display=lock?'none':'block';for(let n=1;n<5;n++){document.getElementById('gt'+n).classList.toggle('sel',!lock&&S.gate===n);document.getElementById('gt'+n).classList.toggle('done',S.done[n-1]);document.getElementById('gt'+n).classList.toggle('disabled',lock)}if(lock)return;let z=q[S.gate];document.getElementById('gatebox').innerHTML='<div class="question"><h3>'+z.t+'</h3><p>'+z.p+'</p><label>Jawaban singkat</label><input id="'+z.id+'" value="'+(S.a[z.id]||'')+'"><div id="gf" class="answer-status"></div>'+z.c.map((x,i)=>'<div class="clue">💡 Petunjuk '+(i+1)+': '+x+'</div>').join('')+'</div>';document.getElementById(z.id).oninput=e=>{S.a[z.id]=e.target.value;storageSet(JSON.stringify(S))}}
+function nextGate(){if(!S.conceptDone){tone('bad');return}let z=q[S.gate],v=(document.getElementById(z.id).value||'').replace(/[^\d]/g,'');let f=document.getElementById('gf');if(v===z.ans){S.done[S.gate-1]=true;storageSet(JSON.stringify(S));f.style.color='var(--good)';f.textContent='✓ Jawaban benar! Gerbang berhasil dilewati.';tone('ok');setTimeout(()=>S.gate<4?(S.gate++,renderGate()):go('challenge'),450)}else{f.style.color='#ff9aa8';f.textContent='✕ Belum tepat. Coba periksa kembali informasi dan pola yang kamu temukan.';tone('bad')}}
+function finish(){if(!completedBeforeFinal())return;let v=document.getElementById('f1').value.trim();S.a.f1=v;S.a.f2=document.getElementById('f2').value;if(v.replace(/[^\d]/g,'')!=='5'){tone('bad');alert('Belum tepat. Kembali ke pola dan konsep yang telah ditemukan, lalu coba lagi.');return}tone('ok');S.code='14365';storageSet(JSON.stringify(S));document.getElementById('scode').textContent=S.code;go('code')}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
+function pdf(){let a=S.a,w=open('','_blank');if(!w){alert('Izinkan pop-up browser untuk membuat PDF.');return}let gates=[['Gerbang 1','ga1'],['Gerbang 2','ga2'],['Gerbang 3','ga3'],['Gerbang 4','ga4']];let G=gates.map((x,i)=>'<div class="box"><b>'+x[0]+'</b><br>Jawaban: '+esc(a[x[1]])+'<br>Status: '+(S.done[i]?'Berhasil':'Belum berhasil')+'</div>').join('');w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Jurnal Belajar MathFlow</title><style>@page{size:A4;margin:18mm}body{font-family:Arial;color:#172033;line-height:1.5}h1{color:#123d62}h2{color:#176b8f;border-bottom:2px solid #dcebf2;padding-bottom:5px;margin-top:24px}.meta,.box{border:1px solid #ccd9e2;border-radius:8px;padding:11px;margin:9px 0}.ans{white-space:pre-wrap;background:#f7fafc;padding:8px}.page{page-break-before:always}</style></head><body><h1>MathFlow: Interactive Learning Journey</h1><p><b>Jurnal Belajar Murid · Bunga Tunggal · Pojok Kreatif Kotabumi</b></p><div class="meta"><b>Kelompok:</b> '+esc(S.group)+'<br><b>Anggota:</b> '+S.members.map((m,i)=>'Anggota '+(i+1)+' — '+esc(m)).join(' · ')+'<br><b>Secret Code:</b> '+esc(S.code)+'</div><h2>1. Opening Mission</h2><div class="box">Modal Rp3.000.000 · bunga tunggal 4% per bulan · target Rp3.600.000.<br>Pertanyaan: Berapa bulan yang dibutuhkan?</div><h2>2. Discover</h2><div class="box">Data Discover: Bulan 0 Rp2.000.000 · Bulan 1 Rp2.060.000 · Bulan 2 Rp2.120.000 · Bulan 3 Rp2.180.000</div><div class="box">Jawaban 1: <span class="ans">'+esc(a.d1)+'</span><br>Jawaban 2: <span class="ans">'+esc(a.d2)+'</span><br>Jawaban 3: <span class="ans">'+esc(a.d3)+'</span></div><h2>3. Explore</h2><div class="box">Data Explore: Modal Rp1.500.000 · bunga 2% per bulan · Bulan 1 Rp1.530.000 · Bulan 2 Rp1.560.000 · Bulan 3 Rp1.590.000</div><div class="box">Jawaban 1: <span class="ans">'+esc(a.e1)+'</span><br>Jawaban 2: <span class="ans">'+esc(a.e2)+'</span><br>Jawaban 3: <span class="ans">'+esc(a.e3)+'</span></div><h2>4. Concept</h2><div class="box">Jawaban 1: <span class="ans">'+esc(a.c1)+'</span><br>Jawaban 2: <span class="ans">'+esc(a.c2)+'</span><br>Jawaban 3: <span class="ans">'+esc(a.c3)+'</span><br>Jawaban 4: <span class="ans">'+esc(a.c4)+'</span><br>Jawaban 5: <span class="ans">'+esc(a.c5)+'</span><p><b>Konsep:</b> Mₙ = M₀(1 + i·n)</p><p><b>Arti simbol:</b> M₀ = modal awal · Mₙ = jumlah akhir · i = suku bunga per periode · n = banyaknya periode.</p></div><div class="page"></div><h2>5. The Four Gates</h2>'+G+'<h2>6. Challenge</h2><div class="box">Rp2.400.000 · 5% per tahun · 3 tahun.<br>Jawaban: <span class="ans">'+esc(a.ch1)+'</span><br>Alasan: <span class="ans">'+esc(a.ch2)+'</span></div><h2>7. Final Quest</h2><div class="box">Jawaban: <span class="ans">'+esc(a.f1)+'</span><br>Alasan: <span class="ans">'+esc(a.f2)+'</span></div><h2>8. Secret Code</h2><div class="box" style="text-align:center;font-size:24px"><b>'+esc(S.code)+'</b></div><h2>9. Reflect</h2><div class="box"><b>Pola:</b><div class="ans">'+esc(a.r1)+'</div><b>Hubungan konsep:</b><div class="ans">'+esc(a.r2)+'</div><b>Bagian paling menantang:</b><div class="ans">'+esc(a.r3)+'</div><b>Kerja kelompok:</b><div class="ans">'+esc(a.r4)+'</div><b>Cara menjelaskan penentuan waktu:</b><div class="ans">'+esc(a.r5)+'</div></div><p><small>Jurnal ini dihasilkan otomatis dari perjalanan belajar MathFlow.</small></p><script>onload=()=>setTimeout(()=>print(),400)<\/script></body></html>');w.document.close()}
+stages.forEach((x,i)=>{let b=document.createElement('button');b.textContent=(i+1)+'. '+x[1]+(x[0]==='final'?' 🔒':'');b.dataset.k=x[0];b.onclick=()=>go(x[0]);nav.appendChild(b)});
+window.onload=()=>{badge();document.getElementById('group').value=S.group;S.members.forEach((x,i)=>document.getElementById('m'+(i+1)).value=x);Object.entries(S.a).forEach(([id,v])=>{let e=document.getElementById(id);if(e)e.value=v});if(S.conceptDone)document.getElementById('formula').style.display='block';['c1','c2','c3','c4','c5'].forEach(id=>{const e=document.getElementById(id);if(e)e.addEventListener('input',()=>{checkConceptAnswers(false)});});checkConceptAnswers(false);renderGate();renderFinal();bindEarlyChecks();bindConceptChecks()}
+function makeCode(){
+ const code='14365';
+ S.code=code;
+ storageSet(JSON.stringify(S));
+ return code;
+}
+</script>
+</body></html>

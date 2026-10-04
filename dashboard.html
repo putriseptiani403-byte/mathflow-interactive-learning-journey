@@ -31,6 +31,7 @@ main{max-width:1240px;margin:auto;padding:24px 18px 55px}.cards{display:grid;gri
   <input id="search" placeholder="Cari nama kelompok...">
   <select id="filter"><option value="all">Semua progress</option><option value="Discover">Discover</option><option value="Explore">Explore</option><option value="Concept">Concept</option><option value="Gerbang 1">Gerbang 1</option><option value="Gerbang 2">Gerbang 2</option><option value="Gerbang 3">Gerbang 3</option><option value="Gerbang 4">Gerbang 4</option><option value="Final Quest">Final Quest</option><option value="Selesai">Selesai</option></select>
   <button onclick="sortNewest()">↕ Terbaru</button>
+  <button onclick="resetDashboard()" style="border-color:#7f334f;background:#351526;color:#ff9fc3">🗑️ Reset Data</button>
  </div>
 </div>
 <div class="panel">
@@ -44,7 +45,7 @@ main{max-width:1240px;margin:auto;padding:24px 18px 55px}.cards{display:grid;gri
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyDOEEE_Mr53KLRsiUH8nRZWfxLystSFOmA",
@@ -120,6 +121,16 @@ window.showDetail=function(id){
  box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 window.sortNewest=function(){newestFirst=!newestFirst;render()}
+window.resetDashboard=async function(){
+ if(!confirm("⚠️ RESET SEMUA DATA KELOMPOK?\n\nSemua data di Firebase pada mathflow/kelompok akan dihapus dan tidak bisa dibatalkan.")) return;
+ const confirmText=prompt("Ketik RESET untuk melanjutkan:");
+ if(confirmText!=="RESET"){alert("Reset dibatalkan.");return;}
+ try{
+   await remove(ref(db,"mathflow/kelompok"));
+   allData={}; render();
+   document.getElementById("connection").innerHTML="<span class="online"></span>Data berhasil di-reset";
+ }catch(err){alert("Gagal mereset data: "+err.message);}
+}
 document.getElementById('search').addEventListener('input',render);
 document.getElementById('filter').addEventListener('change',render);
 

@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<title>MathFlow — Dashboard Guru</title>
+
+<style>
+:root{
+  --bg:#f4faf8;
+  --card:#fff;
+  --ink:#17323a;
+  --muted:#64777d;
+  --primary:#0f766e;
+  --line:#d9e7e4;
+  --ok:#15803d;
+  --warn:#b45309;
+  --bad:#b91c1c
+}
+
+*{
+  box-sizing:border-box
+}
+
+body{
+  margin:0;
+  background:linear-gradient(180deg,#e8f7f3,#f7fbfa);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--ink)
+}
+
+header{
+  background:#0f766e;
+  color:#fff;
+  padding:22px 16px
+}
+
+.wrap{
+  max-width:1200px;
+  margin:auto
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap
+}
+
+.top h1{
+  margin:0;
+  font-size:clamp(25px,5vw,38px)
+}
+
+.top p{
+  margin:5px 0 0;
+  opacity:.88
+}
+
+.live{
+  background:rgba(255,255,255,.16);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:800
+}
+
+main{
+  max-width:1200px;
+  margin:auto;
+  padding:20px 15px 50px
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:16px
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px
+}
+
+.stat b{
+  font-size:28px;
+  display:block
+}
+
+.stat span{
+  font-size:13px;
+  color:var(--muted)
+}
+
+.panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 10px 28px rgba(23,50,58,.08);
+  margin-bottom:16px
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center
+}
+
+.toolbar input,
+.toolbar select{
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  font:inherit
+}
+
+.toolbar input{
+  min-width:240px
+}
+
+.tablewrap{
+  overflow:auto
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:900px
+}
+
+th,
+td{
+  padding:12px 9px;
+  border-bottom:1px solid #edf2f1;
+  text-align:left;
+  vertical-align:middle
+}
+
+th{
+  font-size:12px;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:#f8fbfa;
+  position:sticky;
+  top:0
+}
+
+td{
+  font-size:14px
+}
+
+.badge{
+  display:inline-block;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:900
+}
+
+.done{
+  background:#dcfce7;
+  color:#166534
+}
+
+.wait{
+  background:#fff7ed;
+  color:#9a3412
+}
+
+.lock{
+  background:#f1f5f9;
+  color:#64748b
+}
+
+.online{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  background:#22c55e;
+  margin-right:5px
+}
+
+.members{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4
+}
+
+.time{
+  white-space:nowrap;
+  font-size:12px;
+  color:var(--muted)
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:10px 13px;
+  font-weight:800;
+  cursor:pointer;
+  background:#e7f2ef;
+  color:#115e59
+}
+
+button:hover{
+  background:#d6ebe6
+}
+
+.empty{
+  text-align:center;
+  padding:35px;
+  color:var(--muted)
+}
+
+.detail{
+  display:none;
+  background:#f8fbfa;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  margin-top:14px
+}
+
+.detail.show{
+  display:block
+}
+
+.detailgrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px
+}
+
+.kv{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px
+}
+
+.kv small{
+  color:var(--muted);
+  display:block
+}
+
+.kv b{
+  display:block;
+  margin-top:2px
+}
+
+@media(max-width:800px){
+  .cards{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .detailgrid{
+    grid-template-columns:1fr
+  }
+}
+
+@media(max-width:480px){
+  .cards{
+    grid-template-columns:1fr 1fr
+  }
+
+  .toolbar input{
+    min-width:100%;
+    width:100%
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap top">
+    <div>
+      <h1>📊 MathFlow Dashboard</h1>
+      <p>Monitoring perjalanan kelompok secara realtime</p>
+    </div>
+
+    <div class="live" id="connection">
+      ● Menghubungkan Firebase...
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="cards">
+
+  <div class="stat">
+    <b id="total">0</b>
+    <span>Total kelompok</span>
+  </div>
+
+  <div class="stat">
+    <b id="active">0</b>
+    <span>Sedang berjalan</span>
+  </div>
+
+  <div class="stat">
+    <b id="finished">0</b>
+    <span>Selesai</span>
+  </div>
+
+  <div class="stat">
+    <b id="fastest">—</b>
+    <span>Kelompok tercepat masuk</span>
+  </div>
+
+</div>
+
+<div class="panel">
+
+  <div class="toolbar">
+
+    <input
+      id="search"
+      placeholder="Cari nama kelompok..."
+    >
+
+    <select id="filter">
+      <option value="all">Semua progress</option>
+      <option value="Discover">Discover</option>
+      <option value="Explore">Explore</option>
+      <option value="Concept">Concept</option>
+      <option value="Gerbang 1">Gerbang 1</option>
+      <option value="Gerbang 2">Gerbang 2</option>
+      <option value="Gerbang 3">Gerbang 3</option>
+      <option value="Gerbang 4">Gerbang 4</option>
+      <option value="Final Quest">Final Quest</option>
+      <option value="Selesai">Selesai</option>
+    </select>
+
+    <button onclick="sortNewest()">
+      Terbaru
+    </button>
+
+  </div>
+
+</div>
+
+<div class="panel">
+
+  <div class="tablewrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Kelompok</th>
+          <th>Anggota</th>
+          <th>Progress</th>
+          <th>G1</th>
+          <th>G2</th>
+          <th>G3</th>
+          <th>G4</th>
+          <th>Final</th>
+          <th>Kode</th>
+          <th>Update</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody id="rows">
+
+        <tr>
+          <td colspan="11" class="empty">
+            Menunggu data kelompok...
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <div id="detail" class="detail"></div>
+
+</div>
+
+</main>
+
+
+<script type="module">
+
+import {
+  initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  onValue
+}
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyDOEEE_Mr53KLRsiUH8nRZWfxLystSFOmA",
+
+  authDomain:
+    "mathflow-3e648.firebaseapp.com",
+
+  databaseURL:
+    "https://mathflow-3e648-default-rtdb.asia-southeast1.firebasedatabase.app/",
+
+  projectId:
+    "mathflow-3e648",
+
+  storageBucket:
+    "mathflow-3e648.firebasestorage.app",
+
+  messagingSenderId:
+    "530609001743",
+
+  appId:
+    "1:530609001743:web:a7ec3d2fdf84b372109a7a"
+
+};
+
+
+const app =
+  initializeApp(firebaseConfig);
+
+const db =
+  getDatabase(app);
+
+
+let allData = {};
+let newestFirst = true;
+
+
+const esc = v =>
+  String(v ?? '').replace(
+    /[&<>\"']/g,
+    m => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[m])
+  );
+
+
+const badge = ok =>
+  ok
+    ? '<span class="badge done">✓</span>'
+    : '<span class="badge lock">—</span>';
+
+
+function render(){
+
+  const q =
+    document
+      .getElementById('search')
+      .value
+      .toLowerCase()
+      .trim();
+
+  const filter =
+    document.getElementById('filter').value;
+
+
+  let arr =
+    Object
+      .entries(allData)
+      .map(([id,d]) => ({
+        id,
+        ...d
+      }));
+
+
+  arr =
+    arr.filter(d =>
+      (!q ||
+        (d.nama || '')
+          .toLowerCase()
+          .includes(q)
+      )
+      &&
+      (
+        filter === 'all' ||
+        d.progress === filter
+      )
+    );
+
+
+  arr.sort((a,b) => {
+
+    const aa =
+      Number(a.waktuTerakhir) || 0;
+
+    const bb =
+      Number(b.waktuTerakhir) || 0;
+
+    return newestFirst
+      ? bb - aa
+      : aa - bb;
+
+  });
+
+
+  const total =
+    Object.keys(allData).length;
+
+
+  const finished =
+    Object
+      .values(allData)
+      .filter(
+        x => x.progress === 'Selesai'
+      )
+      .length;
+
+
+  document
+    .getElementById('total')
+    .textContent = total;
+
+
+  document
+    .getElementById('active')
+    .textContent =
+      total - finished;
+
+
+  document
+    .getElementById('finished')
+    .textContent =
+      finished;
+
+
+  const entered =
+    Object
+      .entries(allData)
+      .filter(
+        ([id,d]) => d.secretCode
+      );
+
+
+  if(entered.length){
+
+    entered.sort(
+      (a,b) =>
+        (Number(a[1].waktuTerakhir) || Infinity)
+        -
+        (Number(b[1].waktuTerakhir) || Infinity)
+    );
+
+
+    document
+      .getElementById('fastest')
+      .textContent =
+        entered[0][1].nama || '—';
+
+  }else{
+
+    document
+      .getElementById('fastest')
+      .textContent = '—';
+
+  }
+
+
+  const rows =
+    document.getElementById('rows');
+
+
+  if(!arr.length){
+
+    rows.innerHTML =
+      '<tr>' +
+      '<td colspan="11" class="empty">' +
+      'Belum ada kelompok yang cocok.' +
+      '</td>' +
+      '</tr>';
+
+    return;
+
+  }
+
+
+  rows.innerHTML =
+    arr.map(d => {
+
+      const members =
+        (d.anggota || [])
+          .map(esc)
+          .filter(Boolean)
+          .join(', ');
+
+
+      const final =
+        d.finalQuest?.selesai;
+
+
+      return `
+
+        <tr>
+
+          <td>
+            <b>
+              ${esc(d.nama || 'Tanpa nama')}
+            </b>
+            <br>
+            <small>
+              ${esc(d.id)}
+            </small>
+          </td>
+
+
+          <td>
+            <div class="members">
+              ${members || '—'}
+            </div>
+          </td>
+
+
+          <td>
+            <span class="badge ${
+              d.progress === 'Selesai'
+                ? 'done'
+                : 'wait'
+            }">
+              ${esc(
+                d.progress || 'Belum mulai'
+              )}
+            </span>
+          </td>
+
+
+          <td>
+            ${badge(!!d.gerbang1)}
+          </td>
+
+          <td>
+            ${badge(!!d.gerbang2)}
+          </td>
+
+          <td>
+            ${badge(!!d.gerbang3)}
+          </td>
+
+          <td>
+            ${badge(!!d.gerbang4)}
+          </td>
+
+          <td>
+            ${badge(!!final)}
+          </td>
+
+
+          <td>
+            <b>
+              ${
+                d.secretCode
+                  ? esc(d.secretCode)
+                  : '—'
+              }
+            </b>
+          </td>
+
+
+          <td class="time">
+            ${formatTime(d.waktuTerakhir)}
+          </td>
+
+
+          <td>
+
+            <button
+              onclick="showDetail('${esc(d.id)}')"
+            >
+              Detail
+            </button>
+
+          </td>
+
+        </tr>
+
+      `;
+
+    })
+    .join('');
+
+}
+
+
+function formatTime(v){
+
+  if(!v)
+    return '—';
+
+
+  const d =
+    new Date(Number(v));
+
+
+  return isNaN(d)
+    ? '—'
+    : d.toLocaleString(
+        'id-ID',
+        {
+          dateStyle:'short',
+          timeStyle:'medium'
+        }
+      );
+
+}
+
+
+window.showDetail = function(id){
+
+  const d =
+    allData[id];
+
+
+  if(!d)
+    return;
+
+
+  const box =
+    document.getElementById('detail');
+
+
+  box.classList.add('show');
+
+
+  box.innerHTML = `
+
+    <b>
+      Detail: ${esc(d.nama || '')}
+    </b>
+
+    <div class="detailgrid">
+
+      <div class="kv">
+        <small>Progress</small>
+        <b>
+          ${esc(d.progress || '—')}
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Kode rahasia</small>
+        <b>
+          ${esc(
+            d.secretCode ||
+            'Belum ada'
+          )}
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Discover</small>
+        <b>
+          ${
+            d.discover?.selesai
+              ? 'Selesai'
+              : 'Belum'
+          }
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Explore</small>
+        <b>
+          ${
+            d.explore?.selesai
+              ? 'Selesai'
+              : 'Belum'
+          }
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Concept</small>
+        <b>
+          ${
+            d.concept?.selesai
+              ? 'Selesai'
+              : 'Belum'
+          }
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Challenge</small>
+        <b>
+          ${
+            d.challenge?.selesai
+              ? 'Selesai (opsional)'
+              : 'Belum / dilewati'
+          }
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Final Quest</small>
+        <b>
+          ${
+            d.finalQuest?.selesai
+              ? 'Selesai'
+              : 'Belum'
+          }
+        </b>
+      </div>
+
+
+      <div class="kv">
+        <small>Update terakhir</small>
+        <b>
+          ${formatTime(d.waktuTerakhir)}
+        </b>
+      </div>
+
+    </div>
+
+  `;
+
+
+  box.scrollIntoView({
+    behavior:'smooth',
+    block:'nearest'
+  });
+
+};
+
+
+window.sortNewest = function(){
+
+  newestFirst =
+    !newestFirst;
+
+  render();
+
+};
+
+
+document
+  .getElementById('search')
+  .addEventListener(
+    'input',
+    render
+  );
+
+
+document
+  .getElementById('filter')
+  .addEventListener(
+    'change',
+    render
+  );
+
+
+onValue(
+  ref(db,'mathflow/kelompok'),
+
+  snap => {
+
+    allData =
+      snap.val() || {};
+
+
+    document
+      .getElementById('connection')
+      .innerHTML =
+        '<span class="online"></span>' +
+        'Realtime aktif';
+
+
+    render();
+
+  },
+
+  err => {
+
+    console.error(err);
+
+
+    document
+      .getElementById('connection')
+      .textContent =
+        '● Gagal membaca Firebase';
+
+  }
+
+);
+
+</script>
+
+</body>
+</html>
